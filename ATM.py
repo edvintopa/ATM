@@ -37,18 +37,24 @@ class StartPage(tk.Frame):
         label = tk.Label(self, text="Welcome to the CyberATM! Please log in.")
         label.pack(pady=10,padx=10)
 
-        accID = tk.Entry(self)
-        accID.pack()
-        PIN = tk.Entry(self, show="*")
-        PIN.pack()
+        entry_accID = tk.Entry(self)
+        entry_accID.pack()
+        entry_PIN = tk.Entry(self, show="*")
+        entry_PIN.pack()
 
         loginBtn = tk.Button(self, text="Login",
-                            command=lambda: controller.show_frame(AccountPage))
+                            command= self._login_btn_clicked)  #lambda: controller.show_frame(AccountPage))
         loginBtn.pack()
 
         createAcc = tk.Button(self, text="Register new")
         createAcc.pack()
 
+    def _login_btn_clicked(self):
+        accID = self.entry_accID.get()
+        PIN = self.entry_PIN.get()
+
+        if accID == "Edvin Topalovic" and PIN == "0082":
+            lambda: self.controller.show_frame(AccountPage)
 
 class AccountPage(tk.Frame):
 
