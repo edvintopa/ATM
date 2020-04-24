@@ -1,48 +1,102 @@
 import tkinter as tk
 
-class Page(tk.Frame):
-    def __init(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
-    def show(self):
-        self.lift()
+class Body(tk.Tk):
 
-class LoginScreen(Page):
     def __init__(self, *args, **kwargs):
-        Page.__init__(self, *args, *kwargs)
         
-        label = tk.Label(self, text="Welcome to the CyberATM!")
-        label.pack(side="top", fill="both", expand=True)
-
-        button = tk.Button(self, text="Test")
-        button.pack(side="top")
-
-class AccountScreen(Page):
-    def __init__(self, *args, **kwargs):
-        Page.__init__(self, *args, *kwargs)
-        
-        label = tk.Label(self, text="Test successful")
-        label.pack(side="top", fill="both", expand=True)
-
-class Body(tk.Frame):
-    def __init__(self, *args, **kwargs):
-        tk.Frame.__init__(self, *args, **kwargs)
-        p1 = LoginScreen(self)
-        p2 = AccountScreen(self)
-
+        tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand=True)
 
-        p1.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        p2.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        container.pack(side="top", fill="both", expand = True)
 
-        p1.show()
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-    def displayPage(self, ):
-        p1.show()
+        self.frames = {}
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    main = Body(root)
-    main.pack(side="top", fill="both", expand=True)
-    root.wm_geometry("400x400")
-    root.mainloop()
+        for F in (StartPage, AccountPage, PageTwo):
+
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):
+
+        frame = self.frames[cont]
+        frame.tkraise()
+
+        
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="Welcome to the CyberATM! Please log in.")
+        label.pack(pady=10,padx=10)
+
+        accID = tk.Entry(self)
+        accID.pack()
+        PIN = tk.Entry(self, show="*")
+        PIN.pack()
+
+        loginBtn = tk.Button(self, text="Login",
+                            command=lambda: controller.show_frame(AccountPage))
+        loginBtn.pack()
+
+        createAcc = tk.Button(self, text="Register new")
+        createAcc.pack()
+
+
+class AccountPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Welcome" + "Edvin")
+        label.pack(pady=10,padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        button2 = tk.Button(self, text="Page Two",
+                            command=lambda: controller.show_frame(PageTwo))
+        button2.pack()
+
+
+class PageTwo(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Page Two!!!")
+        label.pack(pady=10,padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        button2 = tk.Button(self, text="Page One",
+                            command=lambda: controller.show_frame(PageOne))
+        button2.pack()
+
+class PageTwo(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Page Two!!!")
+        label.pack(pady=10,padx=10)
+
+        button1 = tk.Button(self, text="Back to Home",
+                            command=lambda: controller.show_frame(StartPage))
+        button1.pack()
+
+        button2 = tk.Button(self, text="Page One",
+                            command=lambda: controller.show_frame(PageOne))
+        button2.pack()
+        
+
+
+root = Body()
+root.mainloop()
