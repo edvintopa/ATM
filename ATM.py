@@ -14,7 +14,7 @@ class Body(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, AccountPage, PageTwo):
+        for F in (StartPage, AccountPage):
 
             frame = F(container, self)
 
@@ -43,7 +43,7 @@ class StartPage(tk.Frame):
         entry_PIN.pack()
 
         loginBtn = tk.Button(self, text="Login",
-                            command= self._login_btn_clicked)  #lambda: controller.show_frame(AccountPage))
+                            command= lambda: self._login_btn_clicked)
         loginBtn.pack()
 
         createAcc = tk.Button(self, text="Register new")
@@ -53,8 +53,10 @@ class StartPage(tk.Frame):
         accID = self.entry_accID.get()
         PIN = self.entry_PIN.get()
 
-        if accID == "Edvin Topalovic" and PIN == "0082":
+        if accID == "test" and PIN == "0000":
             lambda: self.controller.show_frame(AccountPage)
+        else:
+            print("Wrong password")
 
 class AccountPage(tk.Frame):
 
@@ -70,39 +72,6 @@ class AccountPage(tk.Frame):
         button2 = tk.Button(self, text="Page Two",
                             command=lambda: controller.show_frame(PageTwo))
         button2.pack()
-
-
-class PageTwo(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page Two!!!")
-        label.pack(pady=10,padx=10)
-
-        button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
-        button1.pack()
-
-        button2 = tk.Button(self, text="Page One",
-                            command=lambda: controller.show_frame(PageOne))
-        button2.pack()
-
-class PageTwo(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Page Two!!!")
-        label.pack(pady=10,padx=10)
-
-        button1 = tk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
-        button1.pack()
-
-        button2 = tk.Button(self, text="Page One",
-                            command=lambda: controller.show_frame(PageOne))
-        button2.pack()
-        
-
 
 root = Body()
 root.mainloop()
