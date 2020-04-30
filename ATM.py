@@ -33,17 +33,18 @@ class Body(tk.Tk):
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
+        self.controller = controller
         tk.Frame.__init__(self,parent)
         label = tk.Label(self, text="Welcome to the CyberATM! Please log in.")
         label.pack(pady=10,padx=10)
 
-        entry_accID = tk.Entry(self)
-        entry_accID.pack()
-        entry_PIN = tk.Entry(self, show="*")
-        entry_PIN.pack()
+        self.entry_accID = tk.Entry(self)
+        self.entry_accID.pack()
+        self.entry_PIN = tk.Entry(self, show="*")
+        self.entry_PIN.pack()
 
         loginBtn = tk.Button(self, text="Login",
-                            command= lambda: self._login_btn_clicked)
+                            command= self._login_btn_clicked)
         loginBtn.pack()
 
         createAcc = tk.Button(self, text="Register new")
@@ -54,7 +55,7 @@ class StartPage(tk.Frame):
         PIN = self.entry_PIN.get()
 
         if accID == "test" and PIN == "0000":
-            lambda: self.controller.show_frame(AccountPage)
+            self.controller.show_frame(AccountPage)
         else:
             print("Wrong password")
 
