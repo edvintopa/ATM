@@ -43,12 +43,12 @@ class StartPage(tk.Frame):
         self.entry_PIN = tk.Entry(self, show="*")
         self.entry_PIN.pack()
 
-        loginBtn = tk.Button(self, text="Login",
+        loginBtn = tk.Button(self, text="Sign in",
                             command= self._login_btn_clicked)
         loginBtn.pack()
 
-        createAcc = tk.Button(self, text="Register new")
-        createAcc.pack()
+        regBtn = tk.Button(self, text="Sign up")
+        regBtn.pack()
 
     def _login_btn_clicked(self):
         accID = self.entry_accID.get()
