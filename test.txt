@@ -1,4 +1,4 @@
-user1,pass1
-user2,pass2
-user3,pass3
-user4,pass4
+pin1,firstName1,lastName1,1000
+pin2,firstName2,lastName2,2000
+pin3,firstName3,lastName3,3000
+pin4,firstName4,lastName4,4000
