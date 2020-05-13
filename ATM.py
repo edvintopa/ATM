@@ -78,10 +78,10 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self,parent)
         label = tk.Label(self, text="Welcome to the CyberATM!").grid(row=0, column=0)
 
-        login_Btn = tk.Button(self, text="Sign in",
+        btn_login = tk.Button(self, text="Sign in",
                             command= lambda: controller.show_frame(LoginPage)).grid(row=1, column=0)
 
-        reg_Btn = tk.Button(self, text="Register",
+        btn_reg = tk.Button(self, text="Register",
                             command= lambda: controller.show_frame(RegisterPage)).grid(row=1, column=1)
 
 #Lets the user sign in
@@ -99,36 +99,29 @@ class LoginPage(tk.Frame):
         self.entry_PIN = tk.Entry(self, show="*")
         self.entry_PIN.grid(row=2, column=1)
 
-        btn_login = tk.Button(self, text="Login", command= self._login()).grid(row=3, column=0)
+        btn_login = tk.Button(self, text="Login").grid(row=3, column=0)
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
 
-    def _login(self):
-        #The account ID is the line where the user info is stored in the users file
-        entry_accID = self.entry_accID.get()
-        entry_PIN = self.entry_PIN.get()
-
-        #Reads users from txt file and enters them into a list
-        file = open("test.txt","r")
-        users = file.readlines()
-
-        currentUser = users[2].split(",")
-
-        currentLogin = Account(currentUser[0],currentUser[1],currentUser[2])
-
-        if entry_PIN == currentLogin.getPIN():
-            self.controller.show_frame(AccountPage)
-        else:
-            print("Error")
-
-
+#Creates new account and stores it in text file
 class RegisterPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
         label_firstname = tk.Label(self, text= "First name").grid(row=0, column=0)
+        self.entry_firstname = tk.Entry(self)
+        self.entry_firstname.grid(row=0, column=1)
+
         label_lastname = tk.Label(self, text= "Last name").grid(row=1, column=0)
+        self.entry_lastname = tk.Entry(self)
+        self.entry_lastname.grid(row=1, column=1)
 
+        label_PIN = tk.Label(self, text="PIN").grid(row=2, column=0)
+        self.entry_PIN = tk.Entry(self, show="*")
+        self.entry_PIN.grid(row=2, column=1)
 
+        btn_reg = tk.Button(self, text="Register").grid(row=3, column=0)
+        btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
 
 class AccountPage(tk.Frame):
 
