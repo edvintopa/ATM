@@ -123,6 +123,7 @@ class RegisterPage(tk.Frame):
         btn_reg = tk.Button(self, text="Register").grid(row=3, column=0)
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
 
+
 class AccountPage(tk.Frame):
 
     def __init__(self, parent, controller):

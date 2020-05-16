@@ -1,43 +1,31 @@
-class Account:
-    #Constructor for account creation
-    def __init__(self, PIN, firstname, lastname):
-        self._PIN = PIN
-        self._firstname = firstname
-        self._lastname = lastname
-        self._balance = 0
-    
-    #Getters for accessing private variables
-    def getPIN(self):
-        return self._PIN
-    def getFirstname(self):
-        return self._firstname
-    def getLastname(self):
-        return self._lastname
-    def getBalance(self):
-        return self._balance
+PASSWORD_FNAME = "User_Data.txt"
 
-    #Setters for changing information (ecxept balance, these have special methods)
-    def setPin(self, input):
-        self._PIN = input
-    def setFirstname(self, input):
-        self._firstname = input
-    def setLastname(self, input):
-        self._lastname = input
+def get_existing_users():
+    with open("r", PASSWORD_FNAME ) as fp:
+         for line in fp.readlines():
+             # This expects each line of a file to be (name, pass) seperated by whitespace
+             username, password = line.split()
+             yield username, password
 
-    #Balance needs deposit and withdrawal methods
-    def deposit(self, amount):
-        if amount > 0:
-            self._balance += amount
-    
-    def withdrawal(self, amount):
-        if self._balance > amount and amount > 0:
-            self._balance -= amount
+def is_authorized(username, password):
+    return any((user == (username, password) for user in get_existing_users()) 
 
-file = open("test.txt","r")
-users = file.readlines()
+def ask_user_credentials():
+    print("Please Provide")
+    name = str(input("Name: "))
+    password = str(input("Password: "))
+    return name, password
 
-currentUser = users[2].split(",")
+def checkdetails():
+    name, password = ask_user_credentials()
+    if is_authorized(name, password):
+       return "Welcome Back, " + name
+    if user_exists(name):
+       return "Password entered is wrong"
+    return "Name not found. Please Sign Up."
 
-currentLogin = Account(currentUser[0],currentUser[1],currentUser[2])
-
-print(currentLogin.getFirstname())
+def getdetails():
+    name, password = ask_user_credentials()
+    if not user_exists(name):
+       return "Name Unavailable. Please Try Again"
+    # Not sure tho what would You like to do here
