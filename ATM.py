@@ -2,6 +2,7 @@
 # License: http://creativecommons.org/licenses/by-sa/3.0/
 
 import tkinter as tk
+from tkinter import messagebox
 
 #Blueprint class for accounts
 class Account:
@@ -108,20 +109,32 @@ class RegisterPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label_firstname = tk.Label(self, text= "First name").grid(row=0, column=0)
-        self.entry_firstname = tk.Entry(self)
-        self.entry_firstname.grid(row=0, column=1)
-
-        label_lastname = tk.Label(self, text= "Last name").grid(row=1, column=0)
-        self.entry_lastname = tk.Entry(self)
-        self.entry_lastname.grid(row=1, column=1)
+        label_uName = tk.Label(self, text= "Username").grid(row=0, column=0)
+        self.entry_uName = tk.Entry(self)
+        self.entry_uName.grid(row=0, column=1)
 
         label_PIN = tk.Label(self, text="PIN").grid(row=2, column=0)
         self.entry_PIN = tk.Entry(self, show="*")
         self.entry_PIN.grid(row=2, column=1)
 
-        btn_reg = tk.Button(self, text="Register").grid(row=3, column=0)
+        btn_reg = tk.Button(self, text="Register", command= self._Register)
+        btn_reg.grid(row=3, column=0)
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
+
+    def _Register(self):
+        entry_uName = self.entry_uName.get().lower()
+        entry_PIN = self.entry_PIN.get().lower()
+
+        f = open("User_Data.txt", "r")
+        users = f.read()
+
+        if entry_uName in users:
+            return tk.messagebox.showerror("Username taken", "Username taken!")
+        f.close()
+
+        f = open("User_Data.txt", "w")
+        users = users + "\n" +entry_name + "," + entry_PIN + "," + "0"
+        f.write(users)
 
 
 class AccountPage(tk.Frame):

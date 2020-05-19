@@ -1,31 +1,41 @@
-PASSWORD_FNAME = "User_Data.txt"
+def choices():
+    print("Please choose what you would like to do.")
+    choice = int(input("For Sigining Up Type 1 and For Signing in Type 2: "))
+    if choice == 1:
+       return getdetails()
+    elif choice == 2:
+       return checkdetails()
+    else:
+       raise TypeError
 
-def get_existing_users():
-    with open("r", PASSWORD_FNAME ) as fp:
-         for line in fp.readlines():
-             # This expects each line of a file to be (name, pass) seperated by whitespace
-             username, password = line.split()
-             yield username, password
-
-def is_authorized(username, password):
-    return any((user == (username, password) for user in get_existing_users()) 
-
-def ask_user_credentials():
+def getdetails():
     print("Please Provide")
     name = str(input("Name: "))
     password = str(input("Password: "))
-    return name, password
+    f = open("User_Data.txt",'r')
+    info = f.read()
+    if name in info:
+        return "Name Unavailable. Please Try Again"
+    f.close()
+    f = open("User_Data.txt",'w')
+    info = info + " " +name + " " + password
+    f.write(info)
 
 def checkdetails():
-    name, password = ask_user_credentials()
-    if is_authorized(name, password):
-       return "Welcome Back, " + name
-    if user_exists(name):
-       return "Password entered is wrong"
-    return "Name not found. Please Sign Up."
+    print("Please Provide")
+    name = str(input("Name: "))
+    password = str(input("Password: "))
+    f = open("User_Data.txt",'r')
+    info = f.read()
+    info = info.split()
+    if name in info:
+        index = info.index(name) + 1
+        usr_password = info[index]
+        if usr_password == password:
+            return "Welcome Back, " + name
+        else:
+            return "Password entered is wrong"
+    else:
+        return "Name not found. Please Sign Up."
 
-def getdetails():
-    name, password = ask_user_credentials()
-    if not user_exists(name):
-       return "Name Unavailable. Please Try Again"
-    # Not sure tho what would You like to do here
+print(choices())
