@@ -51,18 +51,26 @@ def saveToFile():
     with open("User_Data.txt", "w") as file:
         file.write(usersArray)
 
+#load balance aswell
 def readFromFile():
     with open("User_Data.txt", "r") as file:
-        inputString = json.loads(file)
-        print(inputString)
+        data = json.loads(file.read())
 
-def test():
-    json_string = '[{"uName": "user1", "_PIN": "1111", "_firstname": "user", "_lastname": "one", "_balance": 0}, {"uName": "user2", "_PIN": "2222", "_firstname": "user", "_lastname": "two", "_balance": 0}, {"uName": "user3", "_PIN": "3333", "_firstname": "user", "_lastname": "three", "_balance": 0}]'
+        users = []
+        for x in len(data):
+            currentUser = data[x]
 
-    data = json.loads(json_string)
+            uName = currentUser["uName"]
+            PIN = currentUser["_PIN"]
+            firstname = currentUser["_firstname"]
+            lastname = currentUser["_lastname"]
 
-    userData = data
+            users.append(Account(uName, PIN, firstname, lastname))
+        
+        print(users[0].getLastname)
 
-    print(userData[0])
+        #currentUser = data[2]
+        #print(currentUser["_lastname"])
 
-test()
+
+readFromFile()
