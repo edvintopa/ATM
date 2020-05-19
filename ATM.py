@@ -7,7 +7,8 @@ from tkinter import messagebox
 #Blueprint class for accounts
 class Account:
     #Constructor for account creation
-    def __init__(self, PIN, firstname, lastname):
+    def __init__(self, uName, PIN, firstname, lastname):
+        self._uName = uName
         self._PIN = PIN
         self._firstname = firstname
         self._lastname = lastname
@@ -39,6 +40,10 @@ class Account:
     def withdrawal(self, amount):
         if self._balance > amount and amount > 0:
             self._balance -= amount
+
+    #Converts userdata to JSON
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 
 #Main windows which will hold the pages (frames)
@@ -92,9 +97,9 @@ class LoginPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        label_accID = tk.Label(self, text="ID").grid(row=1, column=0)
-        self.entry_accID = tk.Entry(self)
-        self.entry_accID.grid(row=1, column=1)
+        label_accID = tk.Label(self, text="Username").grid(row=1, column=0)
+        self.entry_uName = tk.Entry(self)
+        self.entry_uName.grid(row=1, column=1)
 
         label_PIN = tk.Label(self, text="PIN").grid(row=2, column=0)
         self.entry_PIN = tk.Entry(self, show="*")
@@ -113,28 +118,33 @@ class RegisterPage(tk.Frame):
         self.entry_uName = tk.Entry(self)
         self.entry_uName.grid(row=0, column=1)
 
-        label_PIN = tk.Label(self, text="PIN").grid(row=2, column=0)
+        label_firstname = tk.Label(self, text= "First name").grid(row=1, column=0)
+        self.entry_firstname = tk.Entry(self)
+        self.entry_firstname.grid(row=1, column=1)
+
+        label_lastname = tk.Label(self, text= "Last name").grid(row=2, column=0)
+        self.entry_lastname = tk.Entry(self)
+        self.entry_lastname.grid(row=2, column=1)
+
+        label_PIN = tk.Label(self, text="PIN").grid(row=3, column=0)
         self.entry_PIN = tk.Entry(self, show="*")
-        self.entry_PIN.grid(row=2, column=1)
+        self.entry_PIN.grid(row=3, column=1)
 
         btn_reg = tk.Button(self, text="Register", command= self._Register)
-        btn_reg.grid(row=3, column=0)
-        btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
+        btn_reg.grid(row=4, column=0)
+        btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=4, column=1)
 
     def _Register(self):
         entry_uName = self.entry_uName.get().lower()
+        entry_firstname = self.entry_uName.get().lower()
+        entry_lastname = self.entry_uName.get().lower()
         entry_PIN = self.entry_PIN.get().lower()
 
-        f = open("User_Data.txt", "r")
-        users = f.read()
+        #Loads all users and then checks if username is avalible
+        file = open("User_Data.txt", "r")
+        users = file.readlines()
 
-        if entry_uName in users:
-            return tk.messagebox.showerror("Username taken", "Username taken!")
-        f.close()
-
-        f = open("User_Data.txt", "w")
-        users = users + "\n" +entry_name + "," + entry_PIN + "," + "0"
-        f.write(users)
+        
 
 
 class AccountPage(tk.Frame):

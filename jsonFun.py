@@ -38,12 +38,10 @@ class Account:
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
-user1 = Account("0000", "John", "Johnsson")
+f = open("User_Data.txt", "r")
 
-f = open("User_Data.txt", "w+")
+users = f.readlines()
 
-users = f.read()
+json_string = json.dumps(users)
 
-users = users + user1.toJson() + "\n"
-
-f.write(users)
+print(json_string)

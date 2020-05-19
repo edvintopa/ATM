@@ -1,4 +1,0 @@
-pin1,firstName1,lastName1,1000
-pin2,firstName2,lastName2,2000
-pin3,firstName3,lastName3,3000
-pin4,firstName4,lastName4,4000
