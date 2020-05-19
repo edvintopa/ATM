@@ -2,7 +2,8 @@ import json
 
 class Account:
     #Constructor for account creation
-    def __init__(self, PIN, firstname, lastname):
+    def __init__(self, uName, PIN, firstname, lastname):
+        self.uName = uName
         self._PIN = PIN
         self._firstname = firstname
         self._lastname = lastname
@@ -37,11 +38,31 @@ class Account:
     
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
+    
+def saveToFile():
+    #example accounts
+    user1 = Account("user1", "1111", "user", "one")
+    user2 = Account("user2", "2222", "user", "two")
+    user3 = Account("user3", "3333", "user", "three")
+    usersList = [user1, user2, user3]
+    
+    usersArray = json.dumps([Account.__dict__ for Account in usersList])
 
-f = open("User_Data.txt", "r")
+    with open("User_Data.txt", "w") as file:
+        file.write(usersArray)
 
-users = f.readlines()
+def readFromFile():
+    with open("User_Data.txt", "r") as file:
+        inputString = json.loads(file)
+        print(inputString)
 
-json_string = json.dumps(users)
+def test():
+    json_string = '[{"uName": "user1", "_PIN": "1111", "_firstname": "user", "_lastname": "one", "_balance": 0}, {"uName": "user2", "_PIN": "2222", "_firstname": "user", "_lastname": "two", "_balance": 0}, {"uName": "user3", "_PIN": "3333", "_firstname": "user", "_lastname": "three", "_balance": 0}]'
 
-print(json_string)
+    data = json.loads(json_string)
+
+    userData = data
+
+    print(userData[0])
+
+test()

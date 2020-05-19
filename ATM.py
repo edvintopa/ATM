@@ -3,6 +3,7 @@
 
 import tkinter as tk
 from tkinter import messagebox
+import json
 
 #Blueprint class for accounts
 class Account:
@@ -141,11 +142,12 @@ class RegisterPage(tk.Frame):
         entry_PIN = self.entry_PIN.get().lower()
 
         #Loads all users and then checks if username is avalible
+        #Converts from json array to list
         file = open("User_Data.txt", "r")
-        users = file.readlines()
-
+        usersArray = file.readlines()
         
-
+        for x in usersArray:
+            usersList = json.loads(usersList[x])
 
 class AccountPage(tk.Frame):
 
