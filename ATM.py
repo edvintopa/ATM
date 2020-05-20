@@ -8,14 +8,16 @@ import json
 #Blueprint class for accounts
 class Account:
     #Constructor for account creation
-    def __init__(self, uName, PIN, firstname, lastname):
-        self._uName = uName
-        self._PIN = PIN
-        self._firstname = firstname
-        self._lastname = lastname
-        self._balance = 0
+    def __init__(self, _uName, _PIN, _firstname, _lastname, _balance):
+        self._uName = _uName
+        self._PIN = _PIN
+        self._firstname = _firstname
+        self._lastname = _lastname
+        self._balance = _balance
     
     #Getters for accessing private variables
+    def getuName(self):
+        return self._uName
     def getPIN(self):
         return self._PIN
     def getFirstname(self):
@@ -25,7 +27,9 @@ class Account:
     def getBalance(self):
         return self._balance
 
-    #Setters for changing information (ecxept balance, these have special methods)
+    #Setters for changing information (ecxept balance, this has special methods)
+    def setuName(self, input):
+        self._uName = input
     def setPin(self, input):
         self._PIN = input
     def setFirstname(self, input):
@@ -42,10 +46,23 @@ class Account:
         if self._balance > amount and amount > 0:
             self._balance -= amount
 
-    #Converts userdata to JSON
-    def toJson(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+#Functions for loading and saving userdata from textfile
+def writeFile(userList):
+    json_string = json.dumps([Account.__dict__ for Account in userList])
 
+    with open("User_Data.txt", "w") as file:
+        file.write(json_string)
+
+def readFile():
+    userList = []
+    with open("User_Data.txt", "r") as file:
+        user_data = json.loads(file.read())
+        for u in user_data:
+            userList.append(Account(**u))
+    return userList
+
+#Loads and initiates global list with user data att program launch
+userList = readFile()
 
 #Main windows which will hold the pages (frames)
 class Body(tk.Tk):
@@ -106,8 +123,17 @@ class LoginPage(tk.Frame):
         self.entry_PIN = tk.Entry(self, show="*")
         self.entry_PIN.grid(row=2, column=1)
 
-        btn_login = tk.Button(self, text="Login").grid(row=3, column=0)
+        btn_login = tk.Button(self, text="Login", command= _Login()).grid(row=3, column=0)
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
+
+        def _Login():
+            entry_uName = self.entry_uName
+            entry_PIN = self.entry_PIN
+
+            if len(entry_uName) > 0 and len(entry_PIN) > 0:
+                #attempt login
+            else:
+                messagebox.showerror("Error", "Fill in all forms")
 
 #Creates new account and stores it in text file
 class RegisterPage(tk.Frame):
@@ -136,18 +162,26 @@ class RegisterPage(tk.Frame):
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=4, column=1)
 
     def _Register(self):
-        entry_uName = self.entry_uName.get().lower()
-        entry_firstname = self.entry_uName.get().lower()
-        entry_lastname = self.entry_uName.get().lower()
-        entry_PIN = self.entry_PIN.get().lower()
-
-        #Loads all users and then checks if username is avalible
-        #Converts from json array to list
-        file = open("User_Data.txt", "r")
-        usersArray = file.readlines()
+        entry_uName = self.entry_uName.get()
+        entry_PIN = self.entry_PIN.get()
+        entry_firstname = self.entry_firstname.get().lower()
+        entry_lastname = self.entry_lastname.get().lower()
         
-        for x in usersArray:
-            usersList = json.loads(usersList[x])
+        if len(entry_uName) > 0 and len(entry_PIN) > 0 and len(entry_firstname) > 0 and len(entry_lastname):
+            #Checks if username is avalible
+            uNameList = []
+            for user in range(len(userList)):
+                uNameList.append(userList[user].getuName())
+        
+            if entry_uName in uNameList:
+                messagebox.showerror("Error!", "Username already in use!")
+            else:
+                userList.append(Account(entry_uName, entry_PIN, entry_firstname, entry_lastname, 0))
+                messagebox.showinfo("Operation successfull!", "User registered!")
+                writeFile(userList)
+        else:
+            messagebox.showerror("Error", "Fill in all forms")       
+
 
 class AccountPage(tk.Frame):
 
