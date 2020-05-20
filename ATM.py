@@ -63,6 +63,7 @@ def readFile():
 
 #Loads and initiates global list with user data att program launch
 userList = readFile()
+currentUserIndex = 0
 
 #Main windows which will hold the pages (frames)
 class Body(tk.Tk):
@@ -123,17 +124,31 @@ class LoginPage(tk.Frame):
         self.entry_PIN = tk.Entry(self, show="*")
         self.entry_PIN.grid(row=2, column=1)
 
-        btn_login = tk.Button(self, text="Login", command= _Login()).grid(row=3, column=0)
+        btn_login = tk.Button(self, text="Login", command= self._Login)
+        btn_login.grid(row=3, column=0)
         btn_back = tk.Button(self, text="Back", command= lambda: controller.show_frame(StartPage)).grid(row=3, column=1)
 
-        def _Login():
-            entry_uName = self.entry_uName
-            entry_PIN = self.entry_PIN
+    def _Login(self):
+            entry_uName = self.entry_uName.get()
+            entry_PIN = self.entry_PIN.get()
 
             if len(entry_uName) > 0 and len(entry_PIN) > 0:
-                #attempt login
+                uNameList = []
+                for user in range(len(userList)):
+                    uNameList.append(userList[user].getuName())
+                
+                if entry_uName in uNameList:
+                    currentUserIndex = uNameList.index(entry_uName)
+
+                    if userList[currentUserIndex].getPIN() == entry_PIN:
+                        self.controller.show_frame(AccountPage)
+                    
+                    else:
+                        messagebox.showerror("Error!", "Wrong PIN!")
+                else:
+                    messagebox.showerror("Error!", "User does not exist!")
             else:
-                messagebox.showerror("Error", "Fill in all forms")
+                messagebox.showerror("Error!", "Fill in all forms!")
 
 #Creates new account and stores it in text file
 class RegisterPage(tk.Frame):
@@ -180,18 +195,16 @@ class RegisterPage(tk.Frame):
                 messagebox.showinfo("Operation successfull!", "User registered!")
                 writeFile(userList)
         else:
-            messagebox.showerror("Error", "Fill in all forms")       
+            messagebox.showerror("Error!", "Fill in all forms!")       
 
 
 class AccountPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Welcome" + "Edvin")
-        label.pack(pady=10,padx=10)
+        label = tk.Label(self, text="Welcome" + "Edvin").grid(row=0, column=0)
 
-        button1 = tk.Button(self, text="Back to Home", command=lambda: controller.show_frame(StartPage))
-        button1.pack()
+        button1 = tk.Button(self, text="Back to Home", command=lambda: controller.show_frame(StartPage)).grid(row=1, column=0)
         
 
 #Runs the main windows
