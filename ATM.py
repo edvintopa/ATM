@@ -68,6 +68,17 @@ currentUserIndex = 0
 #Main windows which will hold the pages (frames)
 class Body(tk.Tk):
 
+    #Solution to my lable updates
+    self.name = tk.StringVar()
+    self.name.set("N/A")
+    self.balance = tk.StringVar()
+    self.balance.set("N/A")
+
+    #Updates the displayed info on accountpage
+    def updateUserInfo():
+        self.name.set(userList[currentUserIndex].getFirstname() + " " + userList[currentUserIndex].getLastname())
+        self.balance.set("Balance: " + userList[currentUserIndex].getBalance())
+
     def __init__(self, *args, **kwargs):
         
         tk.Tk.__init__(self, *args, **kwargs)
@@ -93,11 +104,10 @@ class Body(tk.Tk):
         
 
     def show_frame(self, cont):
-
         frame = self.frames[cont]
         frame.tkraise()
 
- #Page made from inherited frame. Welcomes the user and promts them to sign in or register      
+#Page made from inherited frame. Welcomes the user and promts them to sign in or register      
 class StartPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -198,28 +208,19 @@ class RegisterPage(tk.Frame):
         else:
             messagebox.showerror("Error!", "Fill in all forms!")       
 
-
 class AccountPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        self.name = tk.StringVar()
-        self.balance = tk.StringVar()
-
-        label_name = tk.Label(self, textvariable=self.name).grid(row=0, column=0)
+        label_name = tk.Label(self, textvariable=name).grid(row=0, column=0)
         label_desc = tk.Label(self, text="What would you like to do today?").grid(row=1, column=0)
-        label_balance = tk.Label(self, textvariable=self.balance).grid(row=2, column=0)
+        label_balance = tk.Label(self, textvariable=balance).grid(row=2, column=0)
 
         btn_deposit = tk.Button(self, text="Deposit", command=lambda: controller.show_frame(DepositPage)).grid(row=3, column=0)
         btn_withdraw = tk.Button(self, text="Withdraw", command=lambda: controller.show_frame(WithdrawalPage)).grid(row=3, column=1)
         btn_settings = tk.Button(self, text="Settings", command=lambda: controller.show_frame(SettingsPage)).grid(row=4, column=0)
         btn_logout = tk.Button(self, text="Log out", command=lambda: controller.show_frame(StartPage)).grid(row=4, column=1)
-    
-    #Updates the displayed info on accountpage
-    def updateUserInfo(self):
-        self.name.set(userList[currentUserIndex].getFirstname() + " " + userList[currentUserIndex].getLastname())
-        self.balance.set("Balance: " + userList[currentUserIndex].getBalance())
 
 class DepositPage(tk.Frame):
 
@@ -255,7 +256,7 @@ class WithdrawalPage(tk.Frame):
         self.entry_amount = tk.Entry(self)
         self.entry_amount.grid(row=1, column=1)
 
-        btn_withdrawal = tk.Button(self, text="Deposit", command= self._Withdrawal).grid(row=2, column=0)
+        btn_withdrawal = tk.Button(self, text="Withdraw", command= self._Withdrawal).grid(row=2, column=0)
         btn_cancel = tk.Button(self, text="Cancel", command=lambda: controller.show_frame(AccountPage)).grid(row=2, column=1)
     
     def _Withdrawal(self):
