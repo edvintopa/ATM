@@ -68,17 +68,6 @@ currentUserIndex = 0
 #Main windows which will hold the pages (frames)
 class Body(tk.Tk):
 
-    #Solution to my lable updates
-    self.name = tk.StringVar()
-    self.name.set("N/A")
-    self.balance = tk.StringVar()
-    self.balance.set("N/A")
-
-    #Updates the displayed info on accountpage
-    def updateUserInfo():
-        self.name.set(userList[currentUserIndex].getFirstname() + " " + userList[currentUserIndex].getLastname())
-        self.balance.set("Balance: " + userList[currentUserIndex].getBalance())
-
     def __init__(self, *args, **kwargs):
         
         tk.Tk.__init__(self, *args, **kwargs)
@@ -92,7 +81,7 @@ class Body(tk.Tk):
         self.frames = {}
 
         #Initiates all pages (frames)
-        for F in (StartPage, AccountPage, LoginPage, RegisterPage, DepositPage, WithdrawalPage, SettingsPage):
+        for F in (StartPage, AccountPage, LoginPage, RegisterPage, DepositPage, WithdrawalPage):
 
             frame = F(container, self)
 
@@ -213,14 +202,24 @@ class AccountPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        label_name = tk.Label(self, textvariable=name).grid(row=0, column=0)
+        self.nameVar = tk.StringVar()
+        self.balanceVar = tk.StringVar()
+
+        label_name = tk.Label(self, textvariable=self.nameVar).grid(row=0, column=0)
         label_desc = tk.Label(self, text="What would you like to do today?").grid(row=1, column=0)
-        label_balance = tk.Label(self, textvariable=balance).grid(row=2, column=0)
+        label_balance = tk.Label(self, textvariable=self.balanceVar).grid(row=2, column=0)
 
         btn_deposit = tk.Button(self, text="Deposit", command=lambda: controller.show_frame(DepositPage)).grid(row=3, column=0)
         btn_withdraw = tk.Button(self, text="Withdraw", command=lambda: controller.show_frame(WithdrawalPage)).grid(row=3, column=1)
-        btn_settings = tk.Button(self, text="Settings", command=lambda: controller.show_frame(SettingsPage)).grid(row=4, column=0)
-        btn_logout = tk.Button(self, text="Log out", command=lambda: controller.show_frame(StartPage)).grid(row=4, column=1)
+        btn_logout = tk.Button(self, text="Log out", command=lambda: controller.show_frame(StartPage)).grid(row=4, column=0)
+
+        self.updateInfo()
+        
+
+    def updateInfo(self):
+        self.nameVar.set(userList[currentUserIndex].getFirstname() + " " + userList[currentUserIndex].getLastname())
+        self.balanceVar.set("Balance: " + str(userList[currentUserIndex].getBalance()))
+        self.after(1000, self.updateInfo)
 
 class DepositPage(tk.Frame):
 
@@ -271,55 +270,6 @@ class WithdrawalPage(tk.Frame):
         else:
             messagebox.showerror("Error!", "Invalid amount!")
 
-class SettingsPage(tk.Frame):
-    
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        self.controller = controller
-
-        label_settings = tk.Label(self, text="Settings").grid(row=0, column=0)
-
-        label_uName = tk.Label(self, text= "Username").grid(row=1, column=0)
-        self.entry_uName = tk.Entry(self)
-        self.entry_uName.grid(row=1, column=1)
-
-        label_firstname = tk.Label(self, text= "First name").grid(row=2, column=0)
-        self.entry_firstname = tk.Entry(self)
-        self.entry_firstname.grid(row=2, column=1)
-
-        label_lastname = tk.Label(self, text= "Last name").grid(row=3, column=0)
-        self.entry_lastname = tk.Entry(self)
-        self.entry_lastname.grid(row=3, column=1)
-
-        label_PIN = tk.Label(self, text="PIN").grid(row=4, column=0)
-        self.entry_PIN = tk.Entry(self, show="*")
-        self.entry_PIN.grid(row=4, column=1)
-
-        btn_save = tk.Button(self, text="Save", command=self._Save).grid(row=5, column=0)
-        btn_cancel = tk.Button(self, text="Cancel", command= self.controller.show_frame(AccountPage)).grid(row=5, column=1)
-    
-    def _Save(self):
-        entry_uName = self.entry_uName.get()
-        entry_PIN = self.entry_PIN.get()
-        entry_firstname = self.entry_firstname.get()
-        entry_lastname = self.entry_lastname.get()
-        
-        if len(entry_uName) > 0 and len(entry_PIN) > 0 and len(entry_firstname) > 0 and len(entry_lastname):
-            #Checks if username is avalible
-            uNameList = []
-            for user in range(len(userList)):
-                uNameList.append(userList[user].getuName())
-        
-            if entry_uName in uNameList:
-                messagebox.showerror("Error!", "Username already in use!")
-            else:
-                userList.append(Account(entry_uName, entry_PIN, entry_firstname, entry_lastname, 0))
-                messagebox.showinfo("Operation successfull!", "User settings changed!")
-                userList.pop(currentUserIndex)
-                writeFile(userList)
-                self.controller.show_frame(StartPage)
-        else:
-            messagebox.showerror("Error!", "Fill in all forms!")
 
 #Runs the main window
 root = Body()
