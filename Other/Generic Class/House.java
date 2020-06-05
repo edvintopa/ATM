@@ -14,7 +14,7 @@ public class House<T> {
     public int getRooms() { return this.Rooms; }
     public int getAge() { return this.Age; }
 
-    public void setMake(String Make) { this.Make = Make;}
+    public void setMake(T Price) { this.Price = Price;}
     public void setRooms(int Rooms) { this.Rooms = Rooms;}
     public void setAge(int Age) { this.Age = Age;}
     

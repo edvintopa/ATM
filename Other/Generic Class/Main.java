@@ -14,9 +14,9 @@ public class Main {
             System.out.println();
         }
 
-        MyList<House<?>> Houses = new Mylist<>("Houses");
-        Houses.Add(new House<>(25000, 5, 9));
-        Houses.Add(new House<>(399.99f, 1, 10));
+        MyList<House<?>> Houses = new MyList<>("Houses");
+        Houses.Add(new House<>(59222.99f, 7, 15));
+        Houses.Add(new House<>(3000, 5, 2));
 
         for (int i = 0; i < Houses.getSize(); i++) {
             System.out.println(Houses.get(i).getPrice());
@@ -25,6 +25,5 @@ public class Main {
             System.out.println();
         }
     }
-
    
 }

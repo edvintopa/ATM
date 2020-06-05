@@ -17,7 +17,7 @@ public class Car<T> {
     public String getModel() { return this.Model; }
     public int getYear() { return this.Year; }
     public String getEngine() { return this.Engine; }
-    public T getEngineVolume() { return this.EngineVolume; }Model
+    public T getEngineVolume() { return this.EngineVolume; }
 
     public void setMake(String Make) { this.Make = Make;}
     public void setModel(String Model) { this.Model = Model;}
